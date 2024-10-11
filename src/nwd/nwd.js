@@ -15,15 +15,15 @@ export async function changeDirectory(newDir) {
     const resolvedPath = path.isAbsolute(newDir) ? newDir : path.resolve(newDir);
 
     try {
-        if (await pathExists(resolvedPath)) {
-            const rootDir = getRootDirectory();
-
-            // Check if the resolved path is within the root directory
-            if (resolvedPath.startsWith(rootDir)) {
-                process.chdir(resolvedPath);
-            }
-        } else {
+        if (!await pathExists(resolvedPath)) {
             throw new Error(`Directory "${newDir}" does not exist.`);
+        }
+
+        const rootDir = getRootDirectory();
+
+        // Check if the resolved path is within the root directory
+        if (resolvedPath.startsWith(rootDir)) {
+            process.chdir(resolvedPath);
         }
     } catch (e) {
         console.error(e.message);
@@ -36,7 +36,7 @@ export async function listDirectoryContents() {
     const dir = process.cwd();
 
     try {
-        const dirContent = await fs.readdir(dir, { withFileTypes: true });
+        const dirContent = await fs.readdir(dir, {withFileTypes: true});
 
         const dirFolders = dirContent.filter(item => item.isDirectory()).map(item => item.name);
         const dirFiles = dirContent.filter(item => item.isFile()).map(item => item.name);

@@ -5,6 +5,7 @@ import {copyFile, createFile, deleteFile, moveFile, printFile, renameFile} from 
 import {getOSInfo} from "../os/os.js";
 import {calculateHash} from "../hash/calcHash.js";
 import {compress, decompress} from "../zip/comprOps.js";
+import {INVALID_INPUT_MESSAGE, OPERATION_FAILED_MESSAGE} from "../const/constants.js";
 
 // Execute the command
 export async function executeCommand(command, rl) {
@@ -65,6 +66,33 @@ export function initRl(promptMessage) {
         output: process.stdout,
         prompt: promptMessage
     });
+}
+
+export async function handleUserInput(input, rl) {
+    const trimmedInput = input.trim();
+
+    if (isValidCommand(trimmedInput)) {
+        await executeCommandWithErrorHandling(trimmedInput, rl);
+    } else {
+        console.error(INVALID_INPUT_MESSAGE);
+    }
+
+    await printCurrentDir();
+    rl.prompt();
+}
+
+async function executeCommandWithErrorHandling(command, rl) {
+    try {
+        await executeCommand(command, rl);
+    } catch (e) {
+        console.error(OPERATION_FAILED_MESSAGE);
+    }
+}
+
+export function handleClose(goodbyeMessage) {
+    process.stdout.write('\u001b[2K\r');
+    console.log(goodbyeMessage);
+    process.exit(0);
 }
 
 export function getUsername() {

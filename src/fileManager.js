@@ -1,11 +1,8 @@
-import {printCurrentDir} from './nwd/nwd.js';
-import {INVALID_INPUT_MESSAGE, OPERATION_FAILED_MESSAGE, PROMPT_MESSAGE} from "./const/constants.js";
+import {PROMPT_MESSAGE} from "./const/constants.js";
 import {
-    executeCommand,
     getUsername,
-    greetUser,
+    greetUser, handleClose, handleUserInput,
     initRl,
-    isValidCommand,
     setGoodbyeMessage,
     setWelcomingMessage
 } from "./utils/utils.js";
@@ -25,29 +22,12 @@ async function init() {
 
     // Process the user input
     rl.on('line', async (input) => {
-        const trimmedInput = input.trim();
-
-        if (isValidCommand(trimmedInput)) {
-            try {
-                await executeCommand(trimmedInput);
-            } catch (e) {
-                console.error(OPERATION_FAILED_MESSAGE);
-            }
-
-        } else {
-            console.error(INVALID_INPUT_MESSAGE);
-        }
-
-        // Display the current directory and prompt the user for the next command
-       await printCurrentDir();
-       rl.prompt();
+        await handleUserInput(input, rl);
     });
 
     // Close the readline interface when the user exits
     rl.on('close', () => {
-        process.stdout.write('\u001b[2K\r');
-        console.log(goodbyeMessage);
-        process.exit(0);
+        handleClose(goodbyeMessage)
     });
 }
 
