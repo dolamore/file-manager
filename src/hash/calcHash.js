@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import crypto from 'crypto';
-import {pathExists} from "../nwd/nwd.js";
+import {pathExists} from "../nwd/nwdUtils.js";
 
 export async function calculateHash(filePath) {
     try {

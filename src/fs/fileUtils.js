@@ -1,13 +1,12 @@
 import fs from "fs";
-import { pathExists } from "../nwd/nwd.js";
+import {pathExistsAndIsDirectory, pathExistsAndIsFile, pathExists} from "../nwd/nwdUtils.js";
 import {FILE_END_SEPARATOR} from "../const/constants.js";
 import path from "path";
 
-// Print the contents of a file to the console
 export async function printFile(filePath) {
     try {
         if (await pathExists(filePath)) {
-            const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
+            const readStream = fs.createReadStream(filePath, {encoding: 'utf8'});
 
             return new Promise((resolve, reject) => {
                 readStream.pipe(process.stdout);
@@ -19,7 +18,7 @@ export async function printFile(filePath) {
 
                 readStream.on('error', (e) => {
                     console.error(`Error reading file: ${e.message}`);
-                    reject(e);
+                    return reject(e);
                 });
             });
         } else {
@@ -31,7 +30,7 @@ export async function printFile(filePath) {
     }
 }
 
-export async function createFile(dirPath ,fileName) {
+export async function createFile(dirPath, fileName) {
     const filePath = path.resolve(dirPath, fileName);
     try {
         await fs.promises.access(filePath);
@@ -61,22 +60,19 @@ export async function renameFile(path, newFileName) {
 export async function copyFile(srcPath, destPath) {
     return new Promise(async (resolve, reject) => {
         try {
-            const srcExists = await checkFileExists(srcPath);
-            if (!srcExists) {
+            if (!await pathExistsAndIsFile(srcPath)) {
                 console.error(`Source file "${srcPath}" does not exist or is not a file.`);
                 return reject();
             }
 
-            const destExists = await checkDirectoryExists(destPath);
-            if (!destExists) {
+            if (!await pathExistsAndIsDirectory(destPath)) {
                 console.error(`Destination path "${destPath}" is not a directory or does not exist.`);
                 return reject();
             }
 
             const resolvedDestPath = path.resolve(destPath, path.basename(srcPath));
 
-            const fileExistsInDest = await checkFileExists(resolvedDestPath);
-            if (fileExistsInDest) {
+            if (await pathExistsAndIsFile(resolvedDestPath)) {
                 console.error(`File "${path.basename(srcPath)}" already exists in the destination directory.`);
                 return reject();
             }
@@ -90,29 +86,10 @@ export async function copyFile(srcPath, destPath) {
             writeStream.on('error', (e) => reject(e));
 
             writeStream.on('finish', () => resolve());
-
         } catch (e) {
-            reject(e);
+            return reject(e);
         }
     });
-}
-
-export async function checkFileExists(filePath) {
-    try {
-        const stats = await fs.promises.stat(filePath);
-        return stats.isFile();
-    } catch (e) {
-        return false;
-    }
-}
-
-export async function checkDirectoryExists(dirPath) {
-    try {
-        const stats = await fs.promises.stat(dirPath);
-        return stats.isDirectory();
-    } catch (e) {
-        return false;
-    }
 }
 
 export async function moveFile(srcPath, destPath) {

@@ -1,5 +1,4 @@
-import {pathExists} from "../nwd/nwd.js";
-import {checkDirectoryExists} from "../fs/fileUtils.js";
+import {pathExists, pathExistsAndIsDirectory} from "../nwd/nwdUtils.js";
 import path from "path";
 import fs from "fs";
 import {pipeline} from "stream/promises";
@@ -24,7 +23,7 @@ async function checkCompOpsPaths(srcPath, destPath, errorMessage) {
         throw new Error();
     }
 
-    if (!await checkDirectoryExists(destPath)) {
+    if (!await pathExistsAndIsDirectory(destPath)) {
         console.error(`"${destPath}" does not exist or not a directory.`);
         throw new Error();
     } else {

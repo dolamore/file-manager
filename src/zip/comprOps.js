@@ -1,6 +1,4 @@
-import fs from 'fs';
 import {createGzip, createGunzip} from 'zlib';
-import {pipeline} from 'stream/promises';
 import {COMPRESSION_ERROR_MESSAGE, DECOMPRESSION_ERROR_MESSAGE} from "../const/constants.js";
 import {processStream} from "./comprUtils.js";
 

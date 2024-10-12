@@ -7,7 +7,6 @@ import {calculateHash} from "../hash/calcHash.js";
 import {compress, decompress} from "../zip/comprOps.js";
 import {INVALID_INPUT_MESSAGE, OPERATION_FAILED_MESSAGE} from "../const/constants.js";
 
-// Execute the command
 export async function executeCommand(command, rl) {
     if (command === '.exit') {
         rl.close();
@@ -47,7 +46,6 @@ export async function executeCommand(command, rl) {
     }
 }
 
-// Validate the command
 export function isValidCommand(command) {
     //TODO Add your command validation logic here
     return command.length > 0;

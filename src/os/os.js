@@ -1,34 +1,33 @@
 import os from 'os';
 import {OS_FLAGS} from "../const/constants.js";
+import {handleUnknownFlag, printArch, printCPUs, printEOL, printHomeDir, printUsername} from "./osUtils.js";
 
+// Get OS information based on the provided flag
 export function getOSInfo(flag) {
     switch (flag) {
         case '--EOL':
-            console.log(`End-Of-Line sequence: ${JSON.stringify(os.EOL)}`);
+            printEOL();
             break;
 
         case '--cpus':
-            const cpus = os.cpus();
-            console.log(`Total CPUs: ${cpus.length}`);
-            cpus.forEach((cpu, index) => {
-                console.log(`CPU ${index + 1}: ${cpu.model}, ${cpu.speed / 1000} GHz`);
-            });
+            printCPUs();
             break;
 
         case '--homedir':
-            console.log(`Home Directory: ${os.homedir()}`);
+            printHomeDir();
             break;
 
         case '--username':
-            console.log(`Username: ${os.userInfo().username}`);
+            printUsername();
             break;
 
         case '--architecture':
-            console.log(`CPU Architecture: ${os.arch()}`);
+            printArch();
             break;
 
         default:
-            console.log(`Unknown flag: ${flag}`);
-            console.log(OS_FLAGS);
+            handleUnknownFlag(flag);
     }
 }
+
+
