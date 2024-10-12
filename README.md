@@ -50,7 +50,7 @@ Print in console list of all files and folders in current directory:
 
 `ls`
 
-###Basic operations with files (fs)
+### Basic operations with files (fs)
 
 Read file and print it's content in console:
 
