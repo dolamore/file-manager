@@ -1,0 +1,11 @@
+{
+  "name": "file-manager",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/fileManager.js"
+  },
+  "engines": {
+    "node": ">=22.9.0"
+  }
+}
