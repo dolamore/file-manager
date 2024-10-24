@@ -56,9 +56,9 @@ export async function pathExists(path) {
 }
 
 export async function pathExistsAndIsFile(filePath) {
-    return (await pathExists(filePath) && filePath.isFile());
+    return (await pathExists(filePath) && (await fs.stat(filePath)).isFile());
 }
 
 export async function pathExistsAndIsDirectory(dirPath) {
-    return (await pathExists(dirPath) && dirPath.isDirectory());
+    return (await pathExists(dirPath) && (await fs.stat(dirPath)).isDirectory());
 }
